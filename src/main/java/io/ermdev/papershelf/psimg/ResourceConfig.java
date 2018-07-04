@@ -11,8 +11,12 @@ public class ResourceConfig implements WebMvcConfigurer {
     @Value("${ps.book-dir}")
     private String bookDirectory;
 
+    @Value("${ps.cover-dir}")
+    private String coverDirectory;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("file:" + bookDirectory);
+        registry.addResourceHandler("/**").addResourceLocations("file:" + coverDirectory);
     }
 }

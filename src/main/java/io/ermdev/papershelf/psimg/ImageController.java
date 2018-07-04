@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
 
 @RestController
 @RequestMapping("/upload")
@@ -21,7 +20,7 @@ public class ImageController {
     @Value("${ps.book-dir}")
     private String bookDirectory;
 
-    @PostMapping(value = "/page", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/page", produces = {"application/json"}, consumes = {"multipart/form-data"})
     public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file, PageInfo pageInfo) {
         try {
             if (StringUtils.isEmpty(pageInfo.getTitle())) {
@@ -58,11 +57,10 @@ public class ImageController {
                 fos.flush();
                 fos.close();
             } else {
-                throw new PsImgException("Unable to upload a file");
+                throw new PsImgException("Unable to upload the file");
             }
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(new Image(builder.toString().replace("\\", "/")));
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
