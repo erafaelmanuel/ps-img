@@ -1,27 +1,53 @@
 package io.ermdev.papershelf.psimg;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Configuration
 public class PageInfo {
 
-    @Value("${ps.path}")
-    private String path;
-
     private String title;
-    private String chapterNumber;
-    private String pageNumber;
+    private String bookId;
+    private Integer chapterNumber;
+    private Integer pageNumber;
 
-    public PageInfo() {}
-
-    public PageInfo(@RequestParam(name = "title") String title,
-                    @RequestParam(name = "chapterNumber") String chapterNumber,
-                    @RequestParam(name = "pageNumber") String pageNumber) {
-        this();
+    public PageInfo(@RequestParam("title") String title,
+                    @RequestParam("bookId") String bookId,
+                    @RequestParam("chapterNumber") Integer chapterNumber,
+                    @RequestParam("pageNumber") Integer pageNumber) {
         this.title = title;
+        this.bookId = bookId;
         this.chapterNumber = chapterNumber;
+        this.pageNumber = pageNumber;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public Integer getChapterNumber() {
+        return chapterNumber;
+    }
+
+    public void setChapterNumber(Integer chapterNumber) {
+        this.chapterNumber = chapterNumber;
+    }
+
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
     }
 
@@ -29,8 +55,9 @@ public class PageInfo {
     public String toString() {
         return "PageInfo{" +
                 "title='" + title + '\'' +
-                ", chapterNumber='" + chapterNumber + '\'' +
-                ", pageNumber='" + pageNumber + '\'' +
+                ", bookId='" + bookId + '\'' +
+                ", chapterNumber=" + chapterNumber +
+                ", pageNumber=" + pageNumber +
                 '}';
     }
 }

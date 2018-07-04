@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ResourceConfig implements WebMvcConfigurer {
 
-    @Value("${ps.path}")
-    private String path;
+    @Value("${ps.book-dir}")
+    private String bookDirectory;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("file:" + path);
+        registry.addResourceHandler("/**").addResourceLocations("file:" + bookDirectory);
     }
 }

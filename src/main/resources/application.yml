@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    show_sql: true
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate.ddl-autho: create-drop
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_ps?useSSL=false
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+server:
+  port: 8081
+  servlet:
+    context-path: /img
+multipart:
+  max-file-size: 100MB
+  max-request-size: 100MB
+ps:
+  book-dir: c:/papershelf/books/
+  cover-dir: c:/papershelf/covers/
