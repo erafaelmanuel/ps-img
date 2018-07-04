@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 
 @RestController
 @RequestMapping("/upload")
@@ -50,13 +52,17 @@ public class ImageController {
                         .append(pageInfo.getPageNumber())
                         .append(".")
                         .append(FilenameUtils.getExtension(file.getOriginalFilename()));
-                final File page = new File(builder.toString());
-                file.transferTo(page);
+
+                final FileOutputStream fos = new FileOutputStream(new File(builder.toString()));
+                fos.write(file.getBytes());
+                fos.flush();
+                fos.close();
             } else {
                 throw new PsImgException("Unable to upload a file");
             }
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
