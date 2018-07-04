@@ -20,7 +20,10 @@ public class ImageController {
     @Value("${ps.book-dir}")
     private String bookDirectory;
 
-    @PostMapping(value = "/page", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    @Value("${ps.server}")
+    private String server;
+
+    @PostMapping(value = "/page", consumes = {"multipart/form-data"})
     public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file, PageInfo pageInfo) {
         try {
             if (StringUtils.isEmpty(pageInfo.getTitle())) {
@@ -42,7 +45,7 @@ public class ImageController {
                     .append(File.separator)
                     .append(pageInfo.getBookId())
                     .append(File.separator)
-                    .append("chapter_1")
+                    .append("chapter_")
                     .append(pageInfo.getChapterNumber());
             final File dir = new File(builder.toString());
             if (dir.exists() || dir.mkdirs()) {
@@ -59,6 +62,12 @@ public class ImageController {
             } else {
                 throw new PsImgException("Unable to upload the file");
             }
+            if (server.charAt(server.length() - 1) == '/' || server.charAt(server.length() - 1) == '\\') {
+                builder.delete(0, bookDirectory.length());
+            } else {
+                builder.delete(0, bookDirectory.length() - 1);
+            }
+            builder.insert(0, server);
             return ResponseEntity.ok().body(new Image(builder.toString().replace("\\", "/")));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());

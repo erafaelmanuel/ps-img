@@ -18,3 +18,4 @@ multipart:
 ps:
   book-dir: c:/papershelf/books/
   cover-dir: c:/papershelf/covers/
+  server: http://localhost:8081/img
