@@ -1,7 +1,7 @@
 package io.ermdev.papershelf.psimg;
 
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +15,12 @@ import java.io.FileOutputStream;
 @RestController
 public class ImageController {
 
-    @Value("${ps.book-dir}")
-    private String bookDirectory;
+    private PsImgApplication.ApplicationProperty property;
 
-    @Value("${ps.server}")
-    private String server;
+    @Autowired
+    public ImageController(PsImgApplication.ApplicationProperty property) {
+        this.property = property;
+    }
 
     @PostMapping(value = "/page", consumes = {"multipart/form-data"})
     public ResponseEntity<?> addImagePage(@RequestParam("file") MultipartFile file, PageInfo pageInfo) {
@@ -34,13 +35,13 @@ public class ImageController {
                 throw new PsImgException("bookId is required and it can't be empty");
             }
             if (pageInfo.getChapterNumber() == null || pageInfo.getChapterNumber() <= -1) {
-                throw new PsImgException("chapterNumber is required and it can't have a negative number value");
+                throw new PsImgException("chapterNumber is required and it can't be a negative value");
             }
             if (pageInfo.getPageNumber() == null || pageInfo.getPageNumber() <= -1) {
-                throw new PsImgException("pageNumber is required and it can't have a negative number value");
+                throw new PsImgException("pageNumber is required and it can't be a negative value");
             }
             builder
-                    .append(bookDirectory)
+                    .append(property.getBookDirectory())
                     .append(pageInfo.getTitle().toLowerCase().replace(" ", "_"))
                     .append(File.separator)
                     .append(pageInfo.getBookId())
@@ -61,12 +62,12 @@ public class ImageController {
                 fos.write(file.getBytes());
                 fos.flush();
                 fos.close();
-                if (server.charAt(server.length() - 1) == '/' || server.charAt(server.length() - 1) == '\\') {
-                    builder.delete(0, bookDirectory.length());
-                } else {
-                    builder.delete(0, bookDirectory.length() - 1);
-                }
-                builder.insert(0, server);
+                if (property.getServerName().charAt(property.getServerName().length() - 1) == '/' || property
+                        .getServerName().charAt(property.getServerName().length() - 1) == '\\')
+                    builder.delete(0, property.getBookDirectory().length());
+                else
+                    builder.delete(0, property.getBookDirectory().length() - 1);
+                builder.insert(0, property.getServerName());
 
                 image.setUrl(builder.toString().replace("\\", "/"));
                 image.setDimension(ImageUtil.getImageDimension(imageFile.getPath()));

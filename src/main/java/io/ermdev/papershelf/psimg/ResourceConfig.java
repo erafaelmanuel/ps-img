@@ -1,6 +1,6 @@
 package io.ermdev.papershelf.psimg;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,15 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ResourceConfig implements WebMvcConfigurer {
 
-    @Value("${ps.book-dir}")
-    private String bookDirectory;
+    private PsImgApplication.ApplicationProperty property;
 
-    @Value("${ps.cover-dir}")
-    private String coverDirectory;
+    @Autowired
+    public ResourceConfig(PsImgApplication.ApplicationProperty property) {
+        this.property = property;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-                .addResourceLocations("file:" + bookDirectory, "file:" + coverDirectory);
+                .addResourceLocations("file:" + property.getBookDirectory(), "file:" + property.getCoverDirectory());
     }
 }
