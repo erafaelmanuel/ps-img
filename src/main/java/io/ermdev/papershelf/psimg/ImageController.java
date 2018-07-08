@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,11 @@ public class ImageController {
     @Autowired
     public ImageController(PsImgApplication.ApplicationProperty property) {
         this.property = property;
+    }
+
+    @GetMapping("hello")
+    public String getHello() {
+        return "Hello rafael";
     }
 
     @PostMapping(value = "/page", consumes = {"multipart/form-data"})
